@@ -1,4 +1,4 @@
-== Example for cross-compiling Win64 Binaries from within a Docker-Container
+== Example for cross-compiling rust to winx86_64 binaries from within a Docker-Container
 
 ifndef::env-github[]
 :docker-engine: podman
