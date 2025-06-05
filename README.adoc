@@ -1,0 +1,62 @@
+== Example for cross-compiling Win64 Binaries from within a Docker-Container
+
+ifndef::env-github[]
+:docker-engine: podman
+:image-name: rustcc-debian
+:dockerfile: Dockerfile_debian
+.Commands (Debian based Image using podman)
+include::example-template.adoc[]
+
+:docker-engine: docker
+:image-name: rustcc-ubi
+:dockerfile: Dockerfile_ubi
+.Commands (Ubi based Image using docker)
+[source,shell,opts="linenums,nowrap",subs="attributes"]
+include::example-template.adoc[]
+endif::[]
+ifdef::env-github[]
+:docker-engine: podman
+:image-name: rustcc-debian
+:dockerfile: Dockerfile_debian
+.Commands (Debian based Image using podman)
+[source,shell,opts="linenums,nowrap",subs="attributes"]
+----
+# prune
+{docker-engine} builder prune -f
+
+# build image (debian-variant)
+{docker-engine} build --no-cache -t {image-name} -f {dockerfile} .
+
+# remove target-dir if existing
+rm -r ./target
+
+# compile rust project in temporary container (release build)
+{docker-engine} run --rm -v .\:/project {image-name} cargo build --release
+
+# run built program
+./target/release/cross-compiled-for-win64.exe
+----
+
+:docker-engine: docker
+:image-name: rustcc-ubi
+:dockerfile: Dockerfile_ubi
+.Commands (Ubi based Image using docker)
+[source,shell,opts="linenums,nowrap",subs="attributes"]
+[source,shell,opts="linenums,nowrap",subs="attributes"]
+----
+# prune
+{docker-engine} builder prune -f
+
+# build image (debian-variant)
+{docker-engine} build --no-cache -t {image-name} -f {dockerfile} .
+
+# remove target-dir if existing
+rm -r ./target
+
+# compile rust project in temporary container (release build)
+{docker-engine} run --rm -v .\:/project {image-name} cargo build --release
+
+# run built program
+./target/release/cross-compiled-for-win64.exe
+----
+endif::[]

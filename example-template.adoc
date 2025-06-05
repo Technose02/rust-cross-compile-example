@@ -1,0 +1,17 @@
+[source,shell,opts="linenums,nowrap",subs="attributes"]
+----
+# prune
+{docker-engine} builder prune -f
+
+# build image (debian-variant)
+{docker-engine} build --no-cache -t {image-name} -f {dockerfile} .
+
+# remove target-dir if existing
+rm -r ./target
+
+# compile rust project in temporary container (release build)
+{docker-engine} run --rm -v .\:/project {image-name} cargo build --release
+
+# run built program
+./target/release/cross-compiled-for-win64.exe
+----

@@ -1,0 +1,26 @@
+FROM registry.redhat.io/ubi8/ubi:latest
+
+# Install required packages for Rust and cross-compilation
+RUN dnf clean all && dnf makecache && dnf install -y \
+    build-essential \
+    curl \
+    ca-certificates \
+    mingw-w64 \
+    libstdc++-static \
+    git \
+    binutils \
+    gcc \
+    g++ \
+    make \
+    patch \
+    curl \
+    file
+
+# 📌 Install Rust with typical settings
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+# 📌 Add Windows target for cross-compilation
+RUN . ~/.cargo/env && rustup target add x86_64-pc-windows-gnu
+
+# 📌 Working directory for the project (will be overridden by volume mount)
+WORKDIR /project
